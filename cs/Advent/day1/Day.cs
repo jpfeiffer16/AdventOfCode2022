@@ -8,10 +8,6 @@ public static class Day1 {
     public static void Run() {
         var i = 0;
         var file = File.ReadAllLines("./day1/input.txt");
-            // .GroupBy(l => l == string.Empty ? ++i : i)
-            // .ToList()
-            // .Select(g => g.ToList().Where(i => !string.IsNullOrEmpty(i)).ToList()).ToList();
-            //
         var current = new List<int>();
         var list = new List<List<int>> { current };
 
@@ -31,15 +27,3 @@ public static class Day1 {
         Console.WriteLine("Top 3: {0}", list.Select(g => g.Sum()).OrderByDescending(i => i).Take(3).Sum());
     }
 }
-
-// void PrintList(List<List<int>> list)
-// {
-//     foreach (var group in list)
-//     {
-//         foreach (var count in group)
-//         {
-//             Console.WriteLine(count);
-//         }
-//         Console.WriteLine();
-//     }
-// }
