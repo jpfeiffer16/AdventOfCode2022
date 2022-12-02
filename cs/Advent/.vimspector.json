@@ -1,0 +1,14 @@
+ {
+   "configurations": {
+     "launch": {
+       "adapter": "netcoredbg",
+       "configuration": {
+         "request": "launch",
+         "program": "/home/jpfeiffer/Source/AdventOfCode2022/cs/Advent/bin/Debug/net6.0/Advent.dll",
+         "pwd": "/home/jpfeiffer/Source/AdventOfCode2022/cs/Advent/",
+         "args": [],
+         "stopAtEntry": false
+       }
+     }
+   }
+ }
