@@ -6,7 +6,6 @@ public static class Day1 {
     /// Run.
     /// </summary>
     public static void Run() {
-        var i = 0;
         var file = File.ReadAllLines("./day1/input.txt");
         var current = new List<int>();
         var list = new List<List<int>> { current };
