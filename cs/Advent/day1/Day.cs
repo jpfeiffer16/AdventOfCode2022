@@ -1,7 +1,8 @@
 /// <summary>
 /// Day1.
 /// </summary>
-public static class Day1 {
+public static class Day1
+{
     /// <summary>
     /// Run.
     /// </summary>
