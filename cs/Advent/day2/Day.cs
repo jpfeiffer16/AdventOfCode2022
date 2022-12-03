@@ -9,8 +9,8 @@ public static class Day2
     /// </summary>
     private enum Shape
     {
-        ROCK = 1,
-        PAPER = 2,
+        ROCK     = 1,
+        PAPER    = 2,
         SCISSORS = 3
     }
 
@@ -20,8 +20,8 @@ public static class Day2
     private enum StrategyType
     {
         LOOSE = 1,
-        DRAW = 2,
-        WIN = 3
+        DRAW  = 2,
+        WIN   = 3
     }
 
     /// <summary>
@@ -32,26 +32,18 @@ public static class Day2
         var strategies = File
             .ReadAllLines("./day2/input.txt")
             .Select(l => l.Split(' '))
-            .Select(s => (play: ParseShape(s[0]),
+            .Select(s => (play:     ParseShape(s[0]),
                           response: ParseShape(s[1])));
 
-        var playedScore = 0;
-        foreach (var strategy in strategies)
-        {
-            playedScore += PlayStrategy(
-                    ((Shape)strategy.play,
-                     (Shape)strategy.response));
-        }
-        Console.WriteLine("Played Strategies: {0}", playedScore);
+        Console.WriteLine("Played Strategies: {0}",
+                strategies.Select(strategy => PlayStrategy
+                    (((Shape)strategy.play,
+                      (Shape)strategy.response))).Sum());
 
-        var appliedScore = 0;
-        foreach (var strategy in strategies)
-        {
-            appliedScore += ApplyStrategy(
+        Console.WriteLine("Applied Strategies: {0}",
+                strategies.Select(strategy => ApplyStrategy(
                     ((Shape)strategy.play,
-                     (StrategyType)strategy.response));
-        }
-        Console.WriteLine("Applied Strategies: {0}", appliedScore);
+                     (StrategyType)strategy.response))).Sum());
     }
 
     /// <summary>
@@ -59,26 +51,17 @@ public static class Day2
     /// </summary>
     /// <param name="shapeString">The shape string.</param>
     /// <exception cref="Exception">Exception error.</exception>
-    private static int ParseShape(string shapeString)
-    {
-        switch(shapeString)
+    private static int ParseShape(string shapeString) =>
+        shapeString switch
         {
-            case "A":
-                return 1;
-            case "B":
-                return 2;
-            case "C":
-                return 3;
-            case "X":
-                return 1;
-            case "Y":
-                return 2;
-            case "Z":
-                return 3;
-        }
-        
-        throw new Exception($"Unknown shape: {shapeString}");
-    }
+            "A" => 1,
+            "B" => 2,
+            "C" => 3,
+            "X" => 1,
+            "Y" => 2,
+            "Z" => 3,
+            _   => throw new Exception($"Unknown shape: {shapeString}")
+        };
 
     /// <summary>
     /// Plays strategy.
@@ -111,18 +94,18 @@ public static class Day2
             var (play, response) when response == StrategyType.LOOSE =>
                 play switch
                 {
-                    Shape.ROCK => Shape.SCISSORS,
-                    Shape.PAPER => Shape.ROCK,
+                    Shape.ROCK     => Shape.SCISSORS,
+                    Shape.PAPER    => Shape.ROCK,
                     Shape.SCISSORS => Shape.PAPER,
-                    _ => throw new Exception("Can't LOOSE")
+                    _              => throw new Exception("Can't LOOSE")
                 },
             var (play, response) when response == StrategyType.WIN =>
                 play switch
                 {
-                    Shape.ROCK => Shape.PAPER,
-                    Shape.PAPER => Shape.SCISSORS,
+                    Shape.ROCK     => Shape.PAPER,
+                    Shape.PAPER    => Shape.SCISSORS,
                     Shape.SCISSORS => Shape.ROCK,
-                    _ => throw new Exception("Can't WIN")
+                    _              => throw new Exception("Can't WIN")
                 },
             _ => throw new Exception("Something went wrong here.")
         }));
