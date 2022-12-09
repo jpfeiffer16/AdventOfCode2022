@@ -6,9 +6,8 @@ public static class Day6
         var i = 4;
         for (; i < file.Length; i++)
         {
-            var substring = file.Substring(i - 4, 4);
-            var result = CheckDifferent(substring);
-            if (result) break;
+            if (CheckDifferent(file.Substring(i - 4, 4)))
+                break;
         }
 
         Console.WriteLine("Start of packet: {0}", i);
