@@ -1,80 +1,103 @@
+using System.Text;
+
 namespace VM
 {
-    // This file contains classes for a basic vm implementation
-    //
-    // Example usage:
-    // foreach (var instructionList in alternateInstructionLists)
-    // {
-    //     var vm = new Vm(instructionList);
-    //     try
-    //     {
-    //         using var cancellationTokenSource = new CancellationTokenSource(3000);
-    //         vm.Run(cancellationTokenSource.Token);
-    //         Console.WriteLine("SUCCESS!");
-    //         Console.WriteLine(vm.Accumulator);
-    //     }
-    //     catch (OperationCanceledException)
-    //     {
-    //         Console.WriteLine("ERROR");
-    //     }
-    // }
-
+    /// <summary>
+    /// Instruction.
+    /// </summary>
     public class Instruction
     {
         public string Name { get; }
-        public bool ArgPositive { get; }
-        public long Arg { get; }
-
-        public Instruction(string name, bool argPositive, long arg)
-        {
-            Name = name;
-            ArgPositive = argPositive;
-            Arg = arg;
-        }
+        public int Arg { get; }
 
         public Instruction(string line)
         {
-            // TODO: this is old parsing logic from 2020 Day8
             var parts = line.Split(' ');
-            var name = parts[0];
-            var isPositive = parts[1][0] == '+';
-            var arg = parts[1].Substring(1);
-            Name = name;
-            ArgPositive = isPositive;
-            Arg = long.Parse(arg);
+            Name = parts[0];
+            if (Name == "addx")
+                Arg = int.Parse(parts[1]);
         }
     }
 
+    /// <summary>
+    /// Vm.
+    /// </summary>
     public class Vm
     {
-        public int InstructionPointer = 0;
-        public long Accumulator = 0;
+        private readonly bool[,] Crt = new bool[40, 6];
+        private readonly List<Instruction> _instructions;
+        private int InstructionPointer = 0;
 
-        private List<Instruction> _instructions;
+        public int X { get; private set; } = 1;
+        public int Cycle { get; private set; } = 0;
+        public Dictionary<int, int> SignalStrengths { get; }
+            = new Dictionary<int, int>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Vm"/> class.
+        /// </summary>
+        /// <param name="instructions">The instructions.</param>
         public Vm(List<Instruction> instructions)
         {
             _instructions = instructions;
         }
 
-        public void Run(CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Run.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public void Run(
+                CancellationToken cancellationToken = default)
         {
             for (; InstructionPointer < _instructions.Count; InstructionPointer++)
             {
+                IncrCycle();
+
                 cancellationToken.ThrowIfCancellationRequested();
                 var instruction = _instructions[InstructionPointer];
                 switch (instruction.Name)
                 {
-                    case "acc":
-                        Accumulator += instruction.ArgPositive ? instruction.Arg : -1 * instruction.Arg;
-                        break;
-                    case "jmp":
-                        InstructionPointer += (int)(instruction.ArgPositive ? instruction.Arg : -1 * instruction.Arg) - 1;
+                    case "addx":
+                        IncrCycle();
+                        X += instruction.Arg;
                         break;
                     case "nop":
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Renders crt.
+        /// </summary>
+        public string RenderCrt()
+        {
+            var sb = new StringBuilder();
+            for (var y = 0; y < 6; y++)
+            {
+                for (var x = 0; x < 40; x++)
+                {
+                    sb.Append(Crt[x, y] ? "#" : ".");
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
+        private void IncrCycle()
+        {
+            ++Cycle;
+            if (Cycle == 20
+                || (Cycle > 20
+                    && (Cycle - 20) % 40 == 0))
+            {
+                SignalStrengths[Cycle] = X;
+            }
+            // Draw crt pixel
+            var crtx = (Cycle - 1) % 40;
+            var crty = (Cycle - 1) / 40;
+            Crt[crtx, crty] = crtx >= X - 1 && crtx <= X + 1;
         }
     }
 }
