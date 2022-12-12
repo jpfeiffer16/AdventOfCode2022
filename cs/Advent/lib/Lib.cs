@@ -19,4 +19,16 @@ public static class EnumberableExtensions
 
         return output;
     }
+
+    public static Stack<T> ToStack<T>(this IEnumerable<T> input)
+    {
+        var output = new Stack<T>();
+
+        foreach (var item in input)
+        {
+            output.Push(item);
+        }
+
+        return output;
+    }
 }
