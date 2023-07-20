@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+mkdir -p ./zod/base/gen
+mkdir -p ./zod/base/input
+
+for file in gen/*.hoon;
+  do ln -s ~/Source/AdventOfCode2022/hoon/$file ./zod/base/$file;
+done
+
+# TODO: I cannot, for the life of me figure out why you can't seem
+# to scry these files from anywhere but the base of the ship.
+# EG:
+# .^(wain %cx %/day1/txt)       :: Works fine
+# .^(wain %cx %/input/day1/txt) :: Nope
+
+for file in input/*.txt;
+  do ln -s ~/Source/AdventOfCode2022/hoon/$file ./zod/base/$file;
+done
+cd ..
