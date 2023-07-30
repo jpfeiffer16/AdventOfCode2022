@@ -4,7 +4,26 @@
 :-  %say
 |=  *
 :-  %noun
-=<
+=>
+  |%
+    +$  item  [p=@ud n=@t]
+    +$  pack  [l=(list item) r=(list item) full=(list item)]
+    ++  parse-items
+        |=  input=tape
+        %+  turn  input
+        |=  l=@t
+        =/  pri
+        ?:  &((gte l 'a') (lte l 'z'))  `@ud`(sub l 96)
+        ?:  &((gte l 'A') (lte l 'Z'))  `@ud`(sub l 38)
+          ~&  >>>  "Error, unknown char: {<l>}"
+          !!
+        [p=pri n=l]
+    ++  contains
+      |*  [l=(list) gate=$-(* ?)]
+      |-  ?:  =(l ~)      %|
+          ?:  (gate -:l)  %&
+        $(l +:l)
+  --
 :: Parse the packs
 =/  packs
 ^-  (list pack)
@@ -28,25 +47,6 @@ input
 =(n.left-item n.right-item)
 
 
-|%
-  +$  item  [p=@ud n=@t]
-  +$  pack  [l=(list item) r=(list item) full=(list item)]
-  ++  parse-items
-      |=  input=tape
-      %+  turn  input
-      |=  l=@t
-      =/  pri
-      ?:  &((gte l 'a') (lte l 'z'))  `@ud`(sub l 96)
-      ?:  &((gte l 'A') (lte l 'Z'))  `@ud`(sub l 38)
-        ~&  >>>  "Error, unknown char: {<l>}"
-        !!
-      [p=pri n=l]
-  ++  contains
-    |*  [l=(list) gate=$-(* ?)]
-    |-  ?:  =(l ~)      %|
-        ?:  (gate -:l)  %&
-      $(l +:l)
---
 
 
 :: :-  %say
