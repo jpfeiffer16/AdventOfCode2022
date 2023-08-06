@@ -1,5 +1,5 @@
-:: /*  input  %txt  /input/day3_example/txt
-/*  input  %txt  /input/day3/txt
+/*  input  %txt  /input/day3_example/txt
+:: /*  input  %txt  /input/day3/txt
 
 :-  %say
 |=  *
@@ -36,16 +36,45 @@ input
 :-  ^=  r      (parse-items (slag (div len 2) l))
     ^=  full   (parse-items l)
 
-%+  roll
-  %+  turn
-    packs
-  |=  pack=pack
-  =<  p
-  %-  head
-  %+  skim  l.pack
-  |=  left-item=item
-  %+  contains  r.pack
-  |=  right-item=item
-  :: TODO: Could save a lot of time here and use a (map @t @ud)
-  =(n.left-item n.right-item)
-add
+:: TODO: Use the proper pretty printing here to make this look good
+:: Part 1
+:-
+^=  part-1
+  %+  roll
+    %+  turn
+      packs
+    |=  pack=pack
+    =<  p
+    %-  head
+    %+  skim  l.pack
+    |=  left-item=item
+    %+  contains  r.pack
+    |=  right-item=item
+    :: TODO: Could save a lot of time here and use a (map @t @ud)
+    =(n.left-item n.right-item)
+  add
+
+:: Part 2
+^=  part-2
+  =-
+    %-  roll
+    :_  add
+    %+  turn  `(list (list pack))`groups
+    |=  group=(list pack)
+    =<  p
+    %-  head
+    %+  skim  =<(full ^-(pack (head group)))
+    |=  item=item
+    ?&
+      (contains =<(full `pack`+<:group) |=(i=^item =(n.i n.item)))
+      (contains =<(full `pack`+>-:group) |=(i=^item =(n.i n.item)))
+    ==
+  =/  grouped=(list (list pack))  ~
+  :*  ^=  groups
+      ^-  (list (list pack))
+      |-  ?~  packs  grouped
+      %=  $
+        grouped  [(scag 3 `(list pack)`packs) grouped]
+        packs    +>+:packs
+      ==
+  ==
