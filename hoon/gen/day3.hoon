@@ -1,5 +1,5 @@
-/*  input  %txt  /input/day3_example/txt
-:: /*  input  %txt  /input/day3/txt
+:: /*  input  %txt  /input/day3_example/txt
+/*  input  %txt  /input/day3/txt
 
 :-  %say
 |=  *
